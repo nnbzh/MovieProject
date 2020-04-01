@@ -46,14 +46,14 @@
                 android:id="@+id/movieYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
 
 
-                android:layout_alignParentEnd="true"
+
+
 
                 android:layout_marginTop="10dp"
-                android:layout_toEndOf="@+id/poster"
-                android:layout_toRightOf="@+id/poster"
+
+
                 android:text="2020"
                 android:textSize="12sp"/>
 
@@ -64,8 +64,7 @@
 
 
                 android:layout_marginTop="10dp"
-                android:layout_toEndOf="@+id/poster"
-                android:layout_toRightOf="@+id/poster"
+
                 android:text="Westworld"
                 android:textColor="@color/black"
                 android:textSize="17sp"
