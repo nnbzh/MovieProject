@@ -68,7 +68,7 @@ class FragmentFeed: Fragment() {
         }
 
         adapter =
-            this.context?.let { MovieAdapter(itemClickListener = this) }
+            this.context.let { MovieAdapter() }
         recyclerView.adapter = adapter
         getMovies()
     }

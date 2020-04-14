@@ -12,8 +12,8 @@ import com.example.movieproject.MovieClasses.*
 import com.squareup.picasso.Picasso
 
 class MovieAdapter(
-    var movies: List<Movie>? = null,
-    var itemClickListener: rvItemClickListener? = null
+    var movies: List<Movie>? = null
+//    var itemClickListener: rvItemClickListener? = null
 ): RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     var number=1
@@ -62,11 +62,9 @@ class MovieAdapter(
             Picasso.get()
                 .load("https://image.tmdb.org/t/p/w500" + movie?.posterPath)
                 .into(poster)
-            view.setOnClickListener {
-                if (movie != null) {
-                    itemClickListener?.itemClick(adapterPosition, movie)
-                }
-            }
+//            view.setOnClickListener {
+//                    itemClickListener?.itemClick(adapterPosition, movie)
+//            }
         }
     }
 
