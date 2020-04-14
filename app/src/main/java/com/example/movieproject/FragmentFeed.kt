@@ -19,8 +19,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.movieproject.BuildConfig.THE_MOVIE_DB_API_TOKEN
+import com.example.movieproject.MovieDBApiKey
 import com.example.movieproject.MovieClasses.*
+import com.example.movieproject.MovieAdapter
 import kotlinx.android.synthetic.main.single_movie.*
 import okhttp3.internal.notify
 import retrofit2.Response
@@ -28,13 +29,13 @@ import java.lang.Exception
 import com.example.movieproject.ServiceBuilder
 
 
-class FragmentFeed: Fragment(), RecyclerViewAdapter.RecyclerViewItemClick {
+class FragmentFeed: Fragment() {
 
     private var relativeLayout: RelativeLayout? = null
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var adapter: MoviesAdapter
+    private lateinit var adapter: MovieAdapter
     private lateinit var sessionId: String
     private lateinit var movieList: MutableList<Movie>
 
@@ -67,7 +68,7 @@ class FragmentFeed: Fragment(), RecyclerViewAdapter.RecyclerViewItemClick {
         }
 
         adapter =
-            this.context?.let { RecyclerViewAdapter(itemClickListener = this) }
+            this.context?.let { MovieAdapter(itemClickListener = this) }
         recyclerView.adapter = adapter
         getMovies()
     }
@@ -75,7 +76,7 @@ class FragmentFeed: Fragment(), RecyclerViewAdapter.RecyclerViewItemClick {
 
     private fun getMovies() {
         swipeRefreshLayout.isRefreshing=true
-        ServiceBuilder.getPostApi().getPopularMovieList(THE_MOVIE_DB_API_TOKEN)
+        ServiceBuilder.getPostApi().getPopularMovieList(MovieDBApiKey)
             .enqueue(object : Callback<MoviesResponse> {
                 override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
                     swipeRefreshLayout.isRefreshing = false
