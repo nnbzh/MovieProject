@@ -20,6 +20,8 @@
             android:background="@color/brown"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/swipeRefreshLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -51,6 +53,7 @@
         </LinearLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="701dp"

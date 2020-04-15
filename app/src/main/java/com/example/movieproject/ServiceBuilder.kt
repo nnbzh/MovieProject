@@ -1,7 +1,9 @@
 package com.example.movieproject
 
+import com.example.movieproject.MovieClasses.LikedMovie
+import com.example.movieproject.MovieClasses.MovieStatus
 import com.example.movieproject.MovieClasses.MoviesResponse
-import com.google.gson.JsonObject
+import com.example.movieproject.MovieClasses.StatusResponse
 import okhttp3.OkHttpClient
 
 import retrofit2.Call
@@ -34,71 +36,50 @@ object ServiceBuilder {
 
 interface PostApi {
 
-    @GET("movie/popular")
-    fun getPopularMovieList(
-        @Query("api_key") apiKey: String
-    ): Call<MoviesResponse>
+    @GET("movie/top_rated")
+    fun getPopularMovieList(@Query("api_key") apiKey: String): Call<MoviesResponse>
 
-    @GET("movie/{movie_id}")
-    fun getMovie(
-        @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String
-    ): Call<JsonObject>
+//    @GET("movie/{id}")
+//    fun getMovieById(
+//        @Path("id") id: Int,
+//        @Query("api_key") apiKe y: String
+//    ): Call<MovieDetails>
+//
+//    @GET("genre/movie/list")
+//    fun getGenres(@Query("api_key") apiKey: String): Call<Genres>
+
+//    @GET("authentication/token/new")
+//    fun createRequestToken(@Query("api_key") apiKey: String): Call<Token>
+//
+//    @POST("authentication/token/validate_with_login")
+//    fun validateWithLogin(
+//        @Query("api_key") apiKey: String,
+//        @Body data: LoginValidationData
+//    ): Call<Token>
+//
+//    @POST("authentication/session/new")
+//    fun createSession(
+//        @Query("api_key") apiKey: String,
+//        @Body token: Token
+//    ): Call<Session>
 
     @GET("account/{account_id}/favorite/movies")
-    fun getFavorites(
-        @Path("account_id") id: Int,
+    fun getFavouriteMovies(
         @Query("api_key") apiKey: String,
         @Query("session_id") sessionId: String
     ): Call<MoviesResponse>
 
     @POST("account/{account_id}/favorite")
-    fun rate(
-        @Path("account_id") accountId: Int?,
+    fun addRemoveFavourites(
         @Query("api_key") apiKey: String,
-        @Query("session_id") sessionId: String?,
-        @Body body: JsonObject
-    ): Call<JsonObject>
+        @Query("session_id") sessionId: String,
+        @Body fav: LikedMovie
+    ): Call<StatusResponse>
 
     @GET("movie/{movie_id}/account_states")
-    fun hasLike(
-        @Path("movie_id") movieId: Int?,
-        @Query("api_key") apiKey: String,
-        @Query("session_id") sessionId: String?
-    ): Call<JsonObject>
-
-    @GET("authentication/token/new")
-    fun getToken(
-        @Query("api_key") apiKey: String
-    ): Call<JsonObject>
-
-    @POST("authentication/token/validate_with_login")
-    fun logIn(
-        @Query("api_key") apiKey: String,
-        @Body body: JsonObject
-    ): Call<JsonObject>
-
-    @POST("authentication/session/new")
-    fun getSession(
-        @Query("api_key") apiKey: String,
-        @Body body: JsonObject
-    ): Call<JsonObject>
-
-    @HTTP(
-        method = "DELETE",
-        path = "authentication/session",
-        hasBody = true
-    )
-    fun deleteSession(
-        @Query("api_key") apiKey: String,
-        @Body body: JsonObject
-    ): Call<JsonObject>
-
-    @GET("account")
-    fun getAccount(
+    fun getMovieStates(
+        @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
         @Query("session_id") sessionId: String
-    ): Call<JsonObject>
-
-
+    ): Call<MovieStatus>
 }
