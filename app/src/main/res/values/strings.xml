@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Movie</string>
-    <string name="api_key">9f25f90f8ac4eabd1795e8484ea9154d</string>
+    <string name="todo">TODO</string>
+    <string name="preference_file">shared_preferences</string>
+    <string name="username">ashkeyevli</string>
+    <string name="password">oljas2905566</string>
+    <string name="session_id">1</string>
 </resources>

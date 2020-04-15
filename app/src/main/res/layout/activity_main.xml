@@ -16,10 +16,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/main_container"
         tools:targetApi="lollipop">
         <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:foreground="@drawable/list"
 
             android:layout_marginStart="10dp"/>
@@ -29,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
-            android:textSize="25sp"
+            android:textSize="19sp"
 
             android:text="Moviedom"
             android:textColor="@color/white" />
@@ -41,19 +42,6 @@
             android:layout_marginStart="160dp"/>
     </Toolbar>
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="@+id/toolbar">
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-    </ScrollView>
 
     <FrameLayout
         android:id="@+id/main_container"
@@ -73,7 +61,11 @@
         app:menu="@menu/bottom_navigation"
         android:background="@color/white"
         app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector">
+        app:itemTextColor="@drawable/selector"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_container"
+        >
 
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
