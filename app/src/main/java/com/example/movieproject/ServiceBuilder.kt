@@ -3,6 +3,8 @@ package com.example.movieproject
 import com.example.movieproject.MovieClasses.LikedMovie
 import com.example.movieproject.MovieClasses.MovieStatus
 import com.example.movieproject.MovieClasses.MoviesResponse
+import com.example.movieproject.MovieClasses.SingleMovie
+import com.google.gson.JsonObject
 import com.example.movieproject.MovieClasses.StatusResponse
 import okhttp3.OkHttpClient
 
@@ -62,6 +64,11 @@ interface PostApi {
 //        @Query("api_key") apiKey: String,
 //        @Body token: Token
 //    ): Call<Session>
+    @GET("movie/{movie_id}")
+    fun getMovie(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): Call<SingleMovie>
 
     @GET("account/{account_id}/favorite/movies")
     fun getFavouriteMovies(
