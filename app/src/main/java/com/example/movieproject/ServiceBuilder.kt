@@ -1,5 +1,8 @@
 package com.example.movieproject
 
+import com.example.movieproject.Account.LoginValidationData
+import com.example.movieproject.Account.Session
+import com.example.movieproject.Account.Token
 import com.example.movieproject.MovieClasses.LikedMovie
 import com.example.movieproject.MovieClasses.MovieStatus
 import com.example.movieproject.MovieClasses.MoviesResponse
@@ -9,6 +12,7 @@ import com.example.movieproject.MovieClasses.StatusResponse
 import okhttp3.OkHttpClient
 
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -34,6 +38,7 @@ object ServiceBuilder {
             return okHttpClient.build()
 
     }
+
 }
 
 interface PostApi {
@@ -50,20 +55,20 @@ interface PostApi {
 //    @GET("genre/movie/list")
 //    fun getGenres(@Query("api_key") apiKey: String): Call<Genres>
 
-//    @GET("authentication/token/new")
-//    fun createRequestToken(@Query("api_key") apiKey: String): Call<Token>
-//
-//    @POST("authentication/token/validate_with_login")
-//    fun validateWithLogin(
-//        @Query("api_key") apiKey: String,
-//        @Body data: LoginValidationData
-//    ): Call<Token>
-//
-//    @POST("authentication/session/new")
-//    fun createSession(
-//        @Query("api_key") apiKey: String,
-//        @Body token: Token
-//    ): Call<Session>
+    @GET("authentication/token/new")
+    fun createRequestToken(@Query("api_key") apiKey: String): Response<Token>
+
+    @POST("authentication/token/validate_with_login")
+    fun validateWithLogin(
+        @Query("api_key") apiKey: String,
+        @Body data: LoginValidationData
+    ): Response<Token>
+
+    @POST("authentication/session/new")
+    fun createSession(
+        @Query("api_key") apiKey: String,
+        @Body token: Token
+    ): Response<Session>
     @GET("movie/{movie_id}")
     fun getMovie(
         @Path("movie_id") movieId: Int,
