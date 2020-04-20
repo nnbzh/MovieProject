@@ -54,18 +54,18 @@ class MovieAdapter(
                 like.setImageResource(R.drawable.like)
             }
 
-            if (movie?.position == 0) {
+            if (movie.position == 0) {
                 movie.position = number
                 number++
             }
 
-            title.text = movie!!.title
-            rating.text = movie!!.voteAverage.toString()
-            releaseDate.text = movie!!.releaseDate.substring(0,4)
+            title.text = movie.title
+            rating.text = movie.voteAverage.toString()
+            releaseDate.text = movie.releaseDate.substring(0,4)
 
 
             Picasso.get()
-                .load("https://image.tmdb.org/t/p/w500" + movie?.posterPath)
+                .load("https://image.tmdb.org/t/p/w500" + movie.posterPath)
                 .into(poster)
             view.setOnClickListener {
                     itemClickListener?.itemClick(adapterPosition, movie)
@@ -73,7 +73,7 @@ class MovieAdapter(
 
             like.setOnClickListener {
                 itemClickListener?.addToFavourites(adapterPosition, movie)
-                if (movie?.isClicked!!) {
+                if (movie.isClicked) {
                     like.setImageResource(R.drawable.liked)
                 } else {
                     like.setImageResource(R.drawable.like)
