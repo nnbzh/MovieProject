@@ -17,7 +17,9 @@
             android:id="@+id/topmenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
             android:background="@color/brown"
+            android:elevation="4dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/swipeRefreshLayout"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,8 +58,9 @@
 
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="701dp"
+            android:layout_height="wrap_content"
             android:background="#FFFFFF"
+            android:paddingBottom="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/topmenu">
 
