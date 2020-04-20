@@ -25,7 +25,7 @@ class FavouritesFragment: Fragment(), MovieAdapter.rvItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private var adapter: MovieAdapter? = null
-    private var sessionId: String = "1"
+    private var sessionId: String = ""
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
@@ -37,14 +37,14 @@ class FavouritesFragment: Fragment(), MovieAdapter.rvItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        sharedPreferences = requireActivity().getSharedPreferences(
-//            getString(R.string.preference_file), Context.MODE_PRIVATE
-//        )
-//
-//        if (sharedPreferences.contains(getString(R.string.session_id))) {
-//            sessionId =
-//                sharedPreferences.getString(getString(R.string.session_id), "null") as String
-//        }
+        sharedPreferences = requireActivity().getSharedPreferences(
+            getString(R.string.preference_file), Context.MODE_PRIVATE
+        )
+
+        if (sharedPreferences.contains(getString(R.string.session_id))) {
+            sessionId =
+                sharedPreferences.getString(getString(R.string.session_id), "null") as String
+        }
 
         bindViews(view)
 
@@ -68,9 +68,9 @@ class FavouritesFragment: Fragment(), MovieAdapter.rvItemClickListener {
     }
 
     override fun itemClick(position: Int, movie: Movie) {
-//        val intent = Intent(context, MovieDetailActivity::class.java)
-//        intent.putExtra("movie_id", item.id)
-//        startActivity(intent)
+        val intent = Intent(context, SingleMovieActivity::class.java)
+        intent.putExtra("movie_id", movie.id)
+        startActivity(intent)
     }
 
     private fun getMovies() {
@@ -89,10 +89,17 @@ class FavouritesFragment: Fragment(), MovieAdapter.rvItemClickListener {
                         val movies: MoviesResponse? = response.body()
                         if (movies?.movieList?.size == 0) {
                             swipeRefreshLayout.isRefreshing = false
+                        } else {
+                            adapter?.movies = movies?.movieList
+                            if (adapter?.movies != null) {
+                                for (movie in adapter?.movies as MutableList<Movie>) {
+                                    movie.isClicked = true
+                                }
+                            }
+                            adapter?.notifyDataSetChanged()
+                            swipeRefreshLayout.isRefreshing = false
                         }
-                        adapter?.notifyDataSetChanged()
                     }
-                    swipeRefreshLayout.isRefreshing = false
                 }
             })
     }

@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.movieproject.MovieClasses.SingleMovie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.single_movie.*
@@ -32,10 +33,13 @@ class SingleMovieActivity : AppCompatActivity() {
     private lateinit var revenue: TextView
     private lateinit var genres: TextView
     private lateinit var producers: TextView
+    private lateinit var mainLayout: ConstraintLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_movie);
+        mainLayout = findViewById(R.id.mainLayout)
+        mainLayout.visibility = View.INVISIBLE;
 
         val movieID = intent.getIntExtra("movie_id", 1);
 
@@ -68,6 +72,7 @@ class SingleMovieActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<SingleMovie>, response: Response<SingleMovie>) {
+                mainLayout.visibility = View.VISIBLE;
                 progressBar.visibility = View.GONE
                 val singleMovie = response.body()
                 if (singleMovie != null) {
@@ -88,6 +93,7 @@ class SingleMovieActivity : AppCompatActivity() {
                         } else {
                             genres.append(", " + singleMovie.genres[i].name.toString());
                         }
+                        if (i == 4) break;
                     }
 
                     for (i in singleMovie.producers.indices) {
