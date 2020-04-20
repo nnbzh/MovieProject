@@ -119,7 +119,7 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
 
         if(!item.isClicked){
             item.isClicked=true
-            likedMovie = LikedMovie("mediaType", item.id, item.isClicked)
+            likedMovie = LikedMovie("movie", item.id, item.isClicked)
 
             ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey,sessionId,likedMovie)
                 .enqueue(object : Callback<StatusResponse>{
