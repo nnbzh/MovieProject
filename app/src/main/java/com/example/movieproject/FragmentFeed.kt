@@ -33,10 +33,10 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
 
     private var relativeLayout: RelativeLayout? = null
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var recyclerView: RecyclerView
+    private  lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var adapter: MovieAdapter
-    private  var sessionId: String="1"
+    private  var adapter: MovieAdapter? = null
+    private  lateinit var sessionId: String
     private lateinit var movieList: MutableList<Movie>
 
 
@@ -50,13 +50,13 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        sharedPreferences = requireActivity().getSharedPreferences(
-//           getString(R.string.preference_file), Context.MODE_PRIVATE
-//        )
-//
-//        if (sharedPreferences.contains(getString(R.string.session_id))) {
-//            sessionId = sharedPreferences.getString(getString(R.string.session_id), "null") as String
-//        }
+        sharedPreferences = requireActivity().getSharedPreferences(
+           getString(R.string.preference_file), Context.MODE_PRIVATE
+        )
+
+        if (sharedPreferences.contains(getString(R.string.session_id))) {
+            sessionId = sharedPreferences.getString(getString(R.string.session_id), "null") as String
+        }
 
         recyclerView=view.findViewById(R.id.recy_feed)
         recyclerView.layoutManager=LinearLayoutManager(context)
@@ -74,9 +74,9 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
     }
 
     override fun itemClick(position: Int, movie: Movie) {
-        val intent = Intent(context, SingleMovieActivity::class.java);
-        intent.putExtra("movie_id", movie.id);
-        startActivity(intent);
+        val intent = Intent(context, SingleMovieActivity::class.java)
+        intent.putExtra("movie_id", movie.id)
+        startActivity(intent)
     }
 
 
@@ -96,9 +96,9 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
 
                     if (response.isSuccessful) {
                         val movies = response.body()
-                        if (movies?.movieList?.size == 0) {
-                            swipeRefreshLayout.isRefreshing = false
-                        }
+//                        if (movies?.movieList?.size == 0) {
+//                            swipeRefreshLayout.isRefreshing = false
+//                        }
                         if (movies != null) {
                             for (movie: Movie in movies.movieList) {
                                 likeStatus(movie)
@@ -126,6 +126,7 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
 
                 override fun onFailure(call: Call<StatusResponse>, t: Throwable)
                 {Toast.makeText(context, "rate operation failed", Toast.LENGTH_SHORT).show()}
+
                 override fun onResponse(
                     call: Call<StatusResponse>,
                     response: Response<StatusResponse>
@@ -134,13 +135,27 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
                 }
             })
 
+        } else {
+            item.isClicked = false
+            likedMovie= LikedMovie("movie", item.id, item.isClicked)
+
+                ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey, sessionId, likedMovie)
+                .enqueue(object : Callback<StatusResponse> {
+                    override fun onFailure(call: Call<StatusResponse>, t: Throwable) {}
+                    override fun onResponse(
+                        call: Call<StatusResponse>,
+                        response: Response<StatusResponse>
+                    ) {
+                    }
+                })
         }
 
 
     }
 
     fun likeStatus(movie: Movie){
-        ServiceBuilder.getPostApi().getMovieStates(movie.id, MovieDBApiKey, sessionId).enqueue(object: Callback<MovieStatus> {
+        ServiceBuilder.getPostApi().getMovieStates(movie.id, MovieDBApiKey, sessionId)
+            .enqueue(object: Callback<MovieStatus> {
             override fun onFailure(call: Call<MovieStatus>, t: Throwable) {}
             override fun onResponse(call: Call<MovieStatus>, response: Response<MovieStatus>) {
                 if (response.isSuccessful) {

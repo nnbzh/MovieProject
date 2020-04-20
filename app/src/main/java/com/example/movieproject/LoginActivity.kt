@@ -6,34 +6,28 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import kotlinx.coroutines.CoroutineScope
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieproject.Account.LoginValidationData
+import com.example.movieproject.Account.Session
 import com.example.movieproject.Account.Token
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class LoginActivity: AppCompatActivity(), CoroutineScope {
-
+class LoginActivity: AppCompatActivity() {
     private lateinit var loginValidationData: LoginValidationData
     private lateinit var token: Token
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var wrongDataText: TextView
     private lateinit var signInButton: Button
     private lateinit var username: EditText
+    private lateinit var receivedToken: String
     private lateinit var password: EditText
     private lateinit var registrationLink: TextView
     private lateinit var progressBar: ProgressBar
 
     private val signUpUrl: String = "https://www.themoviedb.org/account/signup"
     private var sessionId: String = ""
-    private var receivedToken: String = ""
-
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,94 +66,76 @@ class LoginActivity: AppCompatActivity(), CoroutineScope {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
-    }
 
     private fun createTokenRequest() {
-        launch {
-            try {
-                val response = ServiceBuilder.getPostApi().createRequestToken(MovieDBApiKey)
-                if (response.isSuccessful) {
-                    val requestedToken = response.body()
-                    if (requestedToken != null) {
-                        receivedToken = requestedToken.token
-                        loginValidationData = LoginValidationData(
-                            username.text.toString(),
-                            password.text.toString(), receivedToken
-                        )
-                        validateWithLogin()
-                    }
+        ServiceBuilder.getPostApi().createRequestToken(MovieDBApiKey)
+            .enqueue(object: Callback<Token> {
 
-                } else {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        getString(R.string.error),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                override fun onFailure(call: Call<Token>, t: Throwable) {
+                    Toast.makeText(this@LoginActivity, "Error occured", Toast.LENGTH_SHORT).show()
                     progressBar.visibility = View.GONE
+                    receivedToken = ""
                 }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@LoginActivity,
-                    getString(R.string.error),
-                    Toast.LENGTH_SHORT
-                ).show()
-                progressBar.visibility = View.GONE
-            }
-        }
+
+                override fun onResponse(call: Call<Token>, response: Response<Token>) {
+                    if (response.isSuccessful) {
+                        val requestedToken = response.body()
+                        if (requestedToken != null) {
+                            receivedToken = requestedToken.token
+                            loginValidationData = LoginValidationData(
+                                username.text.toString(),
+                                password.text.toString(), receivedToken
+                            )
+                            validateWithLogin()
+                        }
+                    } else {
+                        progressBar.visibility = View.GONE
+                    }
+                }
+            })
     }
 
     private fun validateWithLogin() {
-        launch {
-            try {
-                val response =
-                    ServiceBuilder.getPostApi().validateWithLogin(MovieDBApiKey, loginValidationData)
+        ServiceBuilder.getPostApi().validateWithLogin(MovieDBApiKey, loginValidationData).enqueue(object :
+           Callback<Token> {
+            override fun onFailure(call: Call<Token>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(this@LoginActivity, "Error occurred", Toast.LENGTH_SHORT).show()
+            }
 
+            override fun onResponse(call: Call<Token>, response: Response<Token>) {
                 if (response.isSuccessful) {
                     token = Token(receivedToken)
                     createSession()
                 } else {
-                    wrongDataText.text = getString(R.string.wrong)
+                    wrongDataText.text = "Wrong data"
                     progressBar.visibility = View.GONE
                 }
-            } catch (e: Exception) {
-                wrongDataText.text = getString(R.string.wrong)
-                progressBar.visibility = View.GONE
             }
-        }
+        })
     }
 
     private fun createSession() {
-        launch {
-            try {
-                val response = ServiceBuilder.getPostApi().createSession(MovieDBApiKey, token)
+        ServiceBuilder.getPostApi().createSession(MovieDBApiKey, token).enqueue(object :
+            Callback<Session> {
+            override fun onFailure(call: Call<Session>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(this@LoginActivity, getString(R.string.error), Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<Session>, response: Response<Session>) {
                 if (response.isSuccessful) {
                     sessionId = response.body()?.sessionId.toString()
+
                     saveToSharedPreferences()
 
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
-
-                } else {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(
-                        this@LoginActivity,
-                        getString(R.string.error),
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            } catch (e: Exception) {
-                progressBar.visibility = View.GONE
-                Toast.makeText(
-                    this@LoginActivity,
-                    getString(R.string.error),
-                    Toast.LENGTH_SHORT
-                ).show()
             }
-        }
+        })
     }
+
 
     private fun saveToSharedPreferences() {
 
