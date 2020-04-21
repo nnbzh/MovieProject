@@ -2,22 +2,18 @@ package com.example.movieproject
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.activity_main.view.apptitle
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var toolbar: Toolbar
+    private var toolbar: Toolbar= findViewById(R.id.toolbar)
     private lateinit var toolbarAppTitle: TextView
     private val fragmentManager: FragmentManager= supportFragmentManager
     private var activeFragment: Fragment = FragmentFeed()
@@ -27,8 +23,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        toolbar= findViewById(R.id.toolbar)
-        toolbarAppTitle= findViewById<TextView>(R.id.apptitle)
+
+        toolbarAppTitle = findViewById<TextView>(R.id.apptitle)
 
         sharedPreferences =getSharedPreferences( getString(R.string.preference_file), Context.MODE_PRIVATE)
 
@@ -44,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                     activeFragment = FragmentFeed()
                     fragmentManager.beginTransaction().replace(R.id.main_container, activeFragment)
                         .commit()
-                    toolbarAppTitle.text = "Moviedom"
+                    toolbarAppTitle.text = getString(R.string.app_name)
                     toolbar.setBackgroundColor(getColor(R.color.appColor))
                     return@OnNavigationItemSelectedListener true
                 }
@@ -52,16 +48,15 @@ class MainActivity : AppCompatActivity() {
 
                     activeFragment = FavouritesFragment()
                     fragmentManager.beginTransaction().replace(R.id.main_container, activeFragment).commit()
-                    toolbarAppTitle.text = "Favourite movies"
+                    toolbarAppTitle.text = getString(R.string.favourites)
                     toolbar.setBackgroundColor(getColor(R.color.appColor))
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.account -> {
                     activeFragment = UserInfoFragment()
                     fragmentManager.beginTransaction().replace(R.id.main_container, activeFragment).commit()
-                    toolbarAppTitle.text = "User settings"
+                    toolbarAppTitle.text = getString(R.string.settings)
                     toolbar.setBackgroundColor(getColor(R.color.settings))
-                        //"#35373E"
 
                     return@OnNavigationItemSelectedListener true
                 }

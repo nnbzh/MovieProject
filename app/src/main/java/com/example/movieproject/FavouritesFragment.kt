@@ -7,19 +7,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.movieproject.MovieClasses.*
+import com.example.movieproject.MovieClasses.LikedMovie
+import com.example.movieproject.MovieClasses.Movie
+import com.example.movieproject.MovieClasses.MoviesResponse
+import com.example.movieproject.MovieClasses.StatusResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class FavouritesFragment: Fragment(), MovieAdapter.rvItemClickListener {
+class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
 
 
     private lateinit var recyclerView: RecyclerView

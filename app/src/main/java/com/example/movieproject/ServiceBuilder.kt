@@ -4,17 +4,10 @@ import android.util.Log
 import com.example.movieproject.Account.LoginValidationData
 import com.example.movieproject.Account.Session
 import com.example.movieproject.Account.Token
-import com.example.movieproject.MovieClasses.LikedMovie
-import com.example.movieproject.MovieClasses.MovieStatus
-import com.example.movieproject.MovieClasses.MoviesResponse
-import com.example.movieproject.MovieClasses.SingleMovie
-
-import com.example.movieproject.MovieClasses.StatusResponse
+import com.example.movieproject.MovieClasses.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-
 import retrofit2.Call
-
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*

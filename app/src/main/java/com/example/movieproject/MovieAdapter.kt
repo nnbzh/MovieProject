@@ -3,17 +3,15 @@ package com.example.movieproject
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.movieproject.MovieClasses.*
+import com.example.movieproject.MovieClasses.Movie
 import com.squareup.picasso.Picasso
 
 class MovieAdapter(
     var movies: List<Movie>? = null,
-    var itemClickListener: rvItemClickListener? = null
+    var itemClickListener: RvItemClickListener? = null
 ): RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     var number = 1
@@ -48,32 +46,34 @@ class MovieAdapter(
             val poster = view.findViewById<ImageView>(R.id.poster)
             val like: ImageView = view.findViewById<ImageView>(R.id.like)
 
-            if(movie?.isClicked!!){
+            if(movie?.isClicked == true){
                 like.setImageResource(R.drawable.liked)
             } else{
                 like.setImageResource(R.drawable.like)
             }
 
-            if (movie.position == 0) {
+            if (movie?.position == 0) {
                 movie.position = number
                 number++
             }
 
-            title.text = movie.title
-            rating.text = movie.voteAverage.toString()
-            releaseDate.text = movie.releaseDate.substring(0,4)
+            title.text = movie?.title
+            rating.text = movie?.voteAverage.toString()
+            releaseDate.text = movie?.releaseDate?.substring(0,4)
 
 
             Picasso.get()
-                .load("https://image.tmdb.org/t/p/w500" + movie.posterPath)
+                .load("https://image.tmdb.org/t/p/w500" + movie?.posterPath)
                 .into(poster)
             view.setOnClickListener {
-                    itemClickListener?.itemClick(adapterPosition, movie)
+                movie?.let { it1 -> itemClickListener?.itemClick(adapterPosition, it1) }
             }
 
             like.setOnClickListener {
-                itemClickListener?.addToFavourites(adapterPosition, movie)
-                if (movie.isClicked) {
+                if (movie != null) {
+                    itemClickListener?.addToFavourites(adapterPosition, movie)
+                }
+                if (movie?.isClicked == true) {
                     like.setImageResource(R.drawable.liked)
                 } else {
                     like.setImageResource(R.drawable.like)
@@ -82,7 +82,7 @@ class MovieAdapter(
         }
     }
 
-    interface rvItemClickListener {
+    interface RvItemClickListener {
         fun itemClick(position: Int, movie: Movie)
         fun addToFavourites(position: Int, item: Movie)
     }

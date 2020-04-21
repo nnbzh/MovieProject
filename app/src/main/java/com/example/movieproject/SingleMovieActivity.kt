@@ -1,7 +1,6 @@
 package com.example.movieproject
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -11,12 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.movieproject.MovieClasses.SingleMovie
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.single_movie.*
-import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
 
 class SingleMovieActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
