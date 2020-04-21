@@ -34,7 +34,7 @@
                 android:id="@+id/tv_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Username"
+                tools:text="Username"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"/></LinearLayout>
@@ -52,7 +52,7 @@
            <TextView
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:text="User settings"
+               tools:text="User settings"
                android:textStyle="bold"
                android:paddingBottom="10dp"
                android:textColor="#56575B"
@@ -71,7 +71,7 @@
                    android:paddingLeft="10dp"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="My account"
+                   tools:text="My account"
                    android:textColor="@color/white"
                    android:textSize="20sp"/>
            </LinearLayout>
@@ -90,7 +90,7 @@
                    android:paddingLeft="10dp"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="Privacy and Safety"
+                   tools:text="Privacy and Safety"
                    android:textColor="@color/white"
                    android:textSize="20sp"/>
            </LinearLayout>
@@ -109,7 +109,7 @@
                    android:paddingLeft="10dp"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="Authorized Apps"
+                   tools:text="Authorized Apps"
                    android:textColor="@color/white"
                    android:textSize="20sp"/>
            </LinearLayout>
@@ -128,7 +128,7 @@
                    android:paddingLeft="10dp"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="Connections"
+                   tools:text="Connections"
                    android:textColor="@color/white"
                    android:textSize="20sp"/>
            </LinearLayout>
@@ -147,7 +147,7 @@
                    android:paddingLeft="10dp"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="Scan QR code"
+                   tools:text="Scan QR code"
                    android:textColor="@color/white"
                    android:textSize="20sp"/>
            </LinearLayout>
@@ -167,7 +167,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="App settings"
+                tools:text="App settings"
                 android:textStyle="bold"
                 android:paddingBottom="10dp"
                 android:textColor="#56575B"
@@ -186,7 +186,7 @@
                     android:paddingLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Voice and Video"
+                    tools:text="Voice and Video"
                     android:textColor="@color/white"
                     android:textSize="20sp"/>
             </LinearLayout>
@@ -205,7 +205,7 @@
                     android:paddingLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Notifications"
+                    tools:text="Notifications"
                     android:textColor="@color/white"
                     android:textSize="20sp"/>
             </LinearLayout>

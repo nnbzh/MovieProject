@@ -27,7 +27,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 private fun bindViews(view: View) = with(view) {
 
-    username = view.findViewById(R.id.tv_username)
+    username = findViewById(R.id.tv_username)
 
     sharedPreferences = activity?.getSharedPreferences(
         getString(R.string.preference_file), Context.MODE_PRIVATE

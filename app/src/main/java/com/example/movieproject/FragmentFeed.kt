@@ -3,35 +3,23 @@ package com.example.movieproject
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-
-import android.os.Build
 import android.os.Bundle
-import retrofit2.Call
-import retrofit2.Callback
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.movieproject.MovieDBApiKey
 import com.example.movieproject.MovieClasses.*
-import com.example.movieproject.MovieAdapter
-import kotlinx.android.synthetic.main.single_movie.*
-import okhttp3.internal.notify
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
-import com.example.movieproject.ServiceBuilder
 
 
-class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
+class FragmentFeed: Fragment(), MovieAdapter.RvItemClickListener {
 
-    private var relativeLayout: RelativeLayout? = null
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private  lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
@@ -81,7 +69,7 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
 
 
     private fun getMovies() {
-        swipeRefreshLayout.isRefreshing=true
+        swipeRefreshLayout.isRefreshing = true
         ServiceBuilder.getPostApi().getPopularMovieList(MovieDBApiKey)
             .enqueue(object : Callback<MoviesResponse> {
                 override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
@@ -96,9 +84,6 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
 
                     if (response.isSuccessful) {
                         val movies = response.body()
-//                        if (movies?.movieList?.size == 0) {
-//                            swipeRefreshLayout.isRefreshing = false
-//                        }
                         if (movies != null) {
                             for (movie: Movie in movies.movieList) {
                                 likeStatus(movie)
@@ -118,7 +103,7 @@ class FragmentFeed: Fragment(), MovieAdapter.rvItemClickListener {
         lateinit var likedMovie: LikedMovie
 
         if(!item.isClicked){
-            item.isClicked=true
+            item.isClicked = true
             likedMovie = LikedMovie("movie", item.id, item.isClicked)
 
             ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey,sessionId,likedMovie)

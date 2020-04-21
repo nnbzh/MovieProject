@@ -73,7 +73,7 @@ class LoginActivity: AppCompatActivity() {
             .enqueue(object: Callback<Token> {
 
                 override fun onFailure(call: Call<Token>, t: Throwable) {
-                    Toast.makeText(this@LoginActivity, "Error occured", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, getString(R.string.error), Toast.LENGTH_SHORT).show()
                     progressBar.visibility = View.GONE
                     receivedToken = ""
                 }
@@ -101,7 +101,7 @@ class LoginActivity: AppCompatActivity() {
            Callback<Token> {
             override fun onFailure(call: Call<Token>, t: Throwable) {
                 progressBar.visibility = View.GONE
-                Toast.makeText(this@LoginActivity, "Error occurred", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, getString(R.string.error), Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<Token>, response: Response<Token>) {
@@ -109,7 +109,7 @@ class LoginActivity: AppCompatActivity() {
                     token = Token(receivedToken)
                     createSession()
                 } else {
-                    wrongDataText.text = "Wrong data"
+                    wrongDataText.text = getString(R.string.wrong)
                     progressBar.visibility = View.GONE
                 }
             }
