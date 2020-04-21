@@ -63,7 +63,7 @@ class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
     }
 
     private fun bindViews(view: View) = with(view) {
-        recyclerView = view.findViewById(R.id.like_fragment)
+        recyclerView = findViewById(R.id.like_fragment)
         recyclerView.layoutManager = LinearLayoutManager(context)
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
 
@@ -93,7 +93,7 @@ class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
 
                     if (response.isSuccessful) {
                         val movies: MoviesResponse? = response.body()
-                        if (movies?.movieList?.size == 0) {
+                        if (movies?.movieList?.isNullOrEmpty()!!) {
                             swipeRefreshLayout.isRefreshing = false
                         } else {
                             adapter?.movies = movies?.movieList
