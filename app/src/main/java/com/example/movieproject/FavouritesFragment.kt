@@ -48,12 +48,16 @@ class FavouritesFragment: Fragment(), MovieAdapter.rvItemClickListener {
 
         bindViews(view)
 
-        adapter =
-            this.context?.let { MovieAdapter(itemClickListener = this) }
-        recyclerView.adapter = adapter
+        initAdapter()
 
         getMovies()
 
+    }
+
+    private fun initAdapter() {
+        adapter =
+            this.context?.let { MovieAdapter(itemClickListener = this) }
+        recyclerView.adapter = adapter
     }
 
     private fun bindViews(view: View) = with(view) {
