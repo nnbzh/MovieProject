@@ -75,11 +75,11 @@ class SingleMovieActivity : AppCompatActivity() {
                     title.text = singleMovie.title
                     releaseYear.text = singleMovie.releaseDate.substring(0,4)
                     releaseDate.text = singleMovie.releaseDate
-                    duration.text = singleMovie.runtime.toString() + " min"
+                    duration.text = "${singleMovie.runtime.toString()} ${getString(R.string.min)}"
                     plot.text = singleMovie.overview
                     rating.text = singleMovie.voteAverage.toString()
-                    budget.text = singleMovie.budget.toString() + " $"
-                    revenue.text = singleMovie.revenue.toString() + " $"
+                    budget.text = "${singleMovie.budget.toString()} ${getString(R.string.dollar)}"
+                    revenue.text = "${singleMovie.revenue.toString()} ${getString(R.string.dollar)}"
                     genres.text = ""
                     producers.text = ""
 

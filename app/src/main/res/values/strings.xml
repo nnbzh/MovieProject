@@ -9,4 +9,13 @@
     <string name="wrong">Wrong data</string>
     <string name="favourites">Favourite movies</string>
     <string name="settings">User settings</string>
+    <string name="min"> min</string>
+    <string name="dollar"> $</string>
+    <string name="release_date">Release date:</string>
+    <string name="budget">Budget:</string>
+    <string name="revenue">Revenue:</string>
+    <string name="produced_by">Produced by:</string>
+    <string name="info">Info</string>
+    <string name="cast">Cast</string>
+    <string name="review">Review</string>
 </resources>

@@ -46,19 +46,25 @@ class FragmentFeed: Fragment(), MovieAdapter.RvItemClickListener {
             sessionId = sharedPreferences.getString(getString(R.string.session_id), "null") as String
         }
 
-        recyclerView=view.findViewById(R.id.recy_feed)
-        recyclerView.layoutManager=LinearLayoutManager(context)
-        swipeRefreshLayout=view.findViewById(R.id.swipeRefreshLayout)
+        bindViews(view)
+        initAdapter()
 
         swipeRefreshLayout.setOnRefreshListener {
             adapter?.clearAll()
             getMovies()
         }
 
+        getMovies()
+    }
+    private fun initAdapter() {
+        recyclerView.layoutManager=LinearLayoutManager(context)
         adapter =
             this.context.let { MovieAdapter(itemClickListener = this) }
         recyclerView.adapter = adapter
-        getMovies()
+    }
+    private fun bindViews(view: View) {
+        recyclerView=view.findViewById(R.id.recy_feed)
+        swipeRefreshLayout=view.findViewById(R.id.swipeRefreshLayout)
     }
 
     override fun itemClick(position: Int, movie: Movie) {
