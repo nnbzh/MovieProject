@@ -93,7 +93,7 @@ class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
 
                     if (response.isSuccessful) {
                         val movies: MoviesResponse? = response.body()
-                        if (movies?.movieList?.isNullOrEmpty()!!) {
+                        if (movies?.movieList?.size == 0) {
                             swipeRefreshLayout.isRefreshing = false
                         } else {
                             adapter?.movies = movies?.movieList

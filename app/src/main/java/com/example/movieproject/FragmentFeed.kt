@@ -57,14 +57,14 @@ class FragmentFeed: Fragment(), MovieAdapter.RvItemClickListener {
         getMovies()
     }
     private fun initAdapter() {
-        recyclerView.layoutManager=LinearLayoutManager(context)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         adapter =
             this.context.let { MovieAdapter(itemClickListener = this) }
         recyclerView.adapter = adapter
     }
-    private fun bindViews(view: View) {
-        recyclerView=view.findViewById(R.id.recy_feed)
-        swipeRefreshLayout=view.findViewById(R.id.swipeRefreshLayout)
+    private fun bindViews(view: View) = with(view) {
+        recyclerView = findViewById(R.id.recy_feed)
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
     }
 
     override fun itemClick(position: Int, movie: Movie) {
@@ -128,7 +128,7 @@ class FragmentFeed: Fragment(), MovieAdapter.RvItemClickListener {
 
         } else {
             item.isClicked = false
-            likedMovie= LikedMovie("movie", item.id, item.isClicked)
+            likedMovie = LikedMovie("movie", item.id, item.isClicked)
 
                 ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey, sessionId, likedMovie)
                 .enqueue(object : Callback<StatusResponse> {

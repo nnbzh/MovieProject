@@ -26,14 +26,14 @@ class MainActivity : AppCompatActivity() {
 
         toolbarAppTitle = findViewById<TextView>(R.id.apptitle)
 
-        sharedPreferences =getSharedPreferences( getString(R.string.preference_file), Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences( getString(R.string.preference_file), Context.MODE_PRIVATE)
 
         val bottomNavigationView=findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationListener)
         fragmentManager.beginTransaction().add(R.id.main_container, FragmentFeed(), "1").commit()
     }
 
-    private val navigationListener=
+    private val navigationListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.feed -> {
