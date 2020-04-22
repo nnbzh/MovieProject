@@ -21,4 +21,7 @@
     <string name="now_playing">NOW PLAYING</string>
     <string name="popular">POPULAR</string>
     <string name="upcoming">UPCOMING</string>
+    <string name="sign_in">Sign in</string>
+    <string name="wrong_data">Wrong data</string>
+    <string name="auth_hint">Enter your username and password</string>
 </resources>

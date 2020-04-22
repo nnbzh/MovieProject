@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var toolbar: Toolbar
     private lateinit var toolbarAppTitle: TextView
-    private val fragmentManager: FragmentManager= supportFragmentManager
+    private val fragmentManager: FragmentManager = supportFragmentManager
     private var activeFragment: Fragment = FragmentFeed()
 
 
