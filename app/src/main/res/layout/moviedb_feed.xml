@@ -4,18 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginBottom="10dp"
-    android:background="@color/white">
+    android:layout_marginBottom="2dp"
+    android:background="@color/white"
+
+    >
 
     <RelativeLayout
         android:id="@+id/rellay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:paddingBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <RelativeLayout
             android:id="@+id/posterLayout"

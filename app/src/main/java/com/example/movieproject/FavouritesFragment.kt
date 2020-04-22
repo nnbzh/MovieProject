@@ -124,10 +124,15 @@ class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
                         call: Call<StatusResponse>,
                         response: Response<StatusResponse>
                     ) {
+
+
                     }
                 })
         } else {
             item.isClicked = false
+            swipeRefreshLayout.isRefreshing = true
+            adapter?.clearAll()
+            getMovies()
             likedMovie = LikedMovie("movie", item.id, item.isClicked)
             likedMovie.selectedStatus = item.isClicked
             ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey, sessionId, likedMovie)
@@ -139,8 +144,12 @@ class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
                         call: Call<StatusResponse>,
                         response: Response<StatusResponse>
                     ) {
+
                     }
                 })
+
+
+
         }
     }
 }
