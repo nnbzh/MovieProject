@@ -67,7 +67,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id='@+id/recy_feed'
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:background="@color/grey"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

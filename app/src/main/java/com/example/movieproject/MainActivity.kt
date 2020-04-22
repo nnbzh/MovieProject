@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     fragmentManager.beginTransaction().replace(R.id.main_container, activeFragment)
                         .commit()
                     toolbarAppTitle.text = getString(R.string.app_name)
-                    toolbar.setBackgroundColor(getColor(R.color.appColor))
+                    toolbar.setBackgroundColor(getColor(R.color.brown))
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.like -> {
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                     activeFragment = FavouritesFragment()
                     fragmentManager.beginTransaction().replace(R.id.main_container, activeFragment).commit()
                     toolbarAppTitle.text = getString(R.string.favourites)
-                    toolbar.setBackgroundColor(getColor(R.color.appColor))
+                    toolbar.setBackgroundColor(getColor(R.color.brown))
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.account -> {
