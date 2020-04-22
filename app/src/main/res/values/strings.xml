@@ -18,4 +18,7 @@
     <string name="info">Info</string>
     <string name="cast">Cast</string>
     <string name="review">Review</string>
+    <string name="now_playing">NOW PLAYING</string>
+    <string name="popular">POPULAR</string>
+    <string name="upcoming">UPCOMING</string>
 </resources>

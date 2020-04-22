@@ -13,7 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
-    private var toolbar: Toolbar= findViewById(R.id.toolbar)
+    private lateinit var toolbar: Toolbar
     private lateinit var toolbarAppTitle: TextView
     private val fragmentManager: FragmentManager= supportFragmentManager
     private var activeFragment: Fragment = FragmentFeed()
@@ -24,11 +24,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        toolbar = findViewById(R.id.toolbar)
         toolbarAppTitle = findViewById<TextView>(R.id.apptitle)
 
         sharedPreferences = getSharedPreferences( getString(R.string.preference_file), Context.MODE_PRIVATE)
 
-        val bottomNavigationView=findViewById<BottomNavigationView>(R.id.bottom_nav)
+        val bottomNavigationView= findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationListener)
         fragmentManager.beginTransaction().add(R.id.main_container, FragmentFeed(), "1").commit()
     }

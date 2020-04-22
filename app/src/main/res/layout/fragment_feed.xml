@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                tools:text="NOW PLAYING"
+                android:text="@string/now_playing"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:padding="8dp"
-                tools:text="UPCOMING"
+                android:text="@string/upcoming"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
@@ -49,7 +49,7 @@
 
                 android:layout_marginStart="8dp"
                 android:padding="8dp"
-                tools:text="POPULAR"
+                android:text="@string/popular"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
         </LinearLayout>
