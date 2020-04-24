@@ -3,9 +3,11 @@ package com.example.movieproject
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -15,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var toolbar: Toolbar
     private lateinit var toolbarAppTitle: TextView
+    private lateinit var ibSearch: AppCompatImageButton
     private val fragmentManager: FragmentManager = supportFragmentManager
     private var activeFragment: Fragment = FragmentFeed()
 
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         toolbar = findViewById(R.id.toolbar)
         toolbarAppTitle = findViewById<TextView>(R.id.apptitle)
+        ibSearch = findViewById(R.id.ibSearch)
 
         sharedPreferences = getSharedPreferences( getString(R.string.preference_file), Context.MODE_PRIVATE)
 
@@ -43,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                         .commit()
                     toolbarAppTitle.text = getString(R.string.app_name)
                     toolbar.setBackgroundColor(getColor(R.color.brown))
+                    ibSearch.visibility = View.VISIBLE;
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.like -> {
@@ -51,14 +56,15 @@ class MainActivity : AppCompatActivity() {
                     fragmentManager.beginTransaction().replace(R.id.main_container, activeFragment).commit()
                     toolbarAppTitle.text = getString(R.string.favourites)
                     toolbar.setBackgroundColor(getColor(R.color.brown))
+                    ibSearch.visibility = View.INVISIBLE
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.account -> {
                     activeFragment = UserInfoFragment()
                     fragmentManager.beginTransaction().replace(R.id.main_container, activeFragment).commit()
                     toolbarAppTitle.text = getString(R.string.settings)
-                    toolbar.setBackgroundColor(getColor(R.color.settings))
-
+                    toolbar.setBackgroundColor(getColor(R.color.brown))
+                    ibSearch.visibility = View.INVISIBLE
                     return@OnNavigationItemSelectedListener true
                 }
             }

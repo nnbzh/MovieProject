@@ -8,6 +8,7 @@
     android:background="@color/grey"
     tools:context=".MainActivity">
 
+
     <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -17,6 +18,7 @@
         android:elevation="4dp"
         app:layout_constraintBottom_toTopOf="@id/main_container"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:targetApi="lollipop">
@@ -25,7 +27,6 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="10dp"
-
             android:foreground="@drawable/list" />
 
         <TextView
@@ -42,10 +43,10 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="160dp"
-
-            android:foreground="@drawable/search" />
+            android:foreground="@drawable/search"
+            android:id="@+id/ibSearch"
+            />
     </Toolbar>
-
 
     <FrameLayout
         android:id="@+id/main_container"
