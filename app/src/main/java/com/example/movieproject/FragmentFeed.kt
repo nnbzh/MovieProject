@@ -13,12 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.movieproject.MovieClasses.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
 
-class FragmentFeed: Fragment(), MovieAdapter.RvItemClickListener {
+class FragmentFeed: Fragment(), MovieAdapter.RvItemClickListener, CoroutineScope {
+
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private  lateinit var recyclerView: RecyclerView
@@ -73,82 +83,62 @@ class FragmentFeed: Fragment(), MovieAdapter.RvItemClickListener {
         startActivity(intent)
     }
 
-
     private fun getMovies() {
-        swipeRefreshLayout.isRefreshing = true
-        ServiceBuilder.getPostApi().getPopularMovieList(MovieDBApiKey)
-            .enqueue(object : Callback<MoviesResponse> {
-                override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
-                    swipeRefreshLayout.isRefreshing = false
-                }
-
-                override fun onResponse(
-                    call: Call<MoviesResponse>,
-                    response: Response<MoviesResponse>
-                ) {
-                    movieList = mutableListOf()
-
-                    if (response.isSuccessful) {
-                        val movies = response.body()
-                        if (movies != null) {
-                            for (movie: Movie in movies.movieList) {
-                                likeStatus(movie)
-                                movieList.add(movie)
-                            }
+        launch {
+            swipeRefreshLayout.isRefreshing = true
+            try {
+                val response = ServiceBuilder.getPostApi().getPopularMoviesList(MovieDBApiKey)
+                movieList = mutableListOf()
+                if (response.isSuccessful) {
+                    val movies = response.body()
+                    if (movies != null) {
+                        for (movie: Movie in movies.movieList) {
+                            likeStatus(movie)
+                            movieList.add(movie)
                         }
-                        adapter?.movies = movieList
-                        adapter?.notifyDataSetChanged()
                     }
-                    swipeRefreshLayout.isRefreshing = false
+                    adapter?.movies = movieList
+                    adapter?.notifyDataSetChanged()
+
                 }
-            })
+                swipeRefreshLayout.isRefreshing = false
+            }
+            catch (e: Exception) {
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
     }
 
-    override fun addToFavourites(position: Int, item: Movie) {
 
+
+    override fun addToFavourites(position: Int, item: Movie) {
         lateinit var likedMovie: LikedMovie
 
-        if(!item.isClicked){
+        if (!item.isClicked) {
             item.isClicked = true
             likedMovie = LikedMovie("movie", item.id, item.isClicked)
-
-            ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey,sessionId,likedMovie)
-                .enqueue(object : Callback<StatusResponse>{
-
-                override fun onFailure(call: Call<StatusResponse>, t: Throwable)
-                {Toast.makeText(context, "rate operation failed", Toast.LENGTH_SHORT).show()}
-
-                override fun onResponse(
-                    call: Call<StatusResponse>,
-                    response: Response<StatusResponse>
-                ) {
-
-                }
-            })
-
         } else {
             item.isClicked = false
             likedMovie = LikedMovie("movie", item.id, item.isClicked)
-
-                ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey, sessionId, likedMovie)
-                .enqueue(object : Callback<StatusResponse> {
-                    override fun onFailure(call: Call<StatusResponse>, t: Throwable) {}
-                    override fun onResponse(
-                        call: Call<StatusResponse>,
-                        response: Response<StatusResponse>
-                    ) {
-                    }
-                })
+            likedMovie.selectedStatus = item.isClicked
         }
+        launch {
+            try {
+                val response = ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey, sessionId, likedMovie)
+                if (response.isSuccessful) {
 
+                }
+            } catch (e:Exception) {
 
+            }
+        }
     }
 
-    fun likeStatus(movie: Movie){
-        ServiceBuilder.getPostApi().getMovieStates(movie.id, MovieDBApiKey, sessionId)
-            .enqueue(object: Callback<MovieStatus> {
-            override fun onFailure(call: Call<MovieStatus>, t: Throwable) {}
-            override fun onResponse(call: Call<MovieStatus>, response: Response<MovieStatus>) {
+
+     fun likeStatus(movie: Movie){
+        launch {
+            try {
+                val response = ServiceBuilder.getPostApi().getMovieStates(movie.id, MovieDBApiKey, sessionId)
                 if (response.isSuccessful) {
                     val movieStatus = response.body()
                     if (movieStatus != null) {
@@ -156,7 +146,14 @@ class FragmentFeed: Fragment(), MovieAdapter.RvItemClickListener {
                         adapter?.notifyDataSetChanged()
                     }
                 }
+            } catch (e:Exception) {
+
             }
-        })
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }

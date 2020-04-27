@@ -11,11 +11,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.movieproject.Account.LoginValidationData
 import com.example.movieproject.Account.Session
 import com.example.movieproject.Account.Token
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
-class LoginActivity: AppCompatActivity() {
+class LoginActivity: AppCompatActivity(), CoroutineScope {
+
+    var job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
     private lateinit var loginValidationData: LoginValidationData
     private lateinit var token: Token
     private lateinit var sharedPreferences: SharedPreferences
@@ -45,6 +56,11 @@ class LoginActivity: AppCompatActivity() {
         bindViews()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
+
     private fun bindViews() {
         username = findViewById(R.id.etUsername)
         password = findViewById(R.id.etPassword)
@@ -69,42 +85,32 @@ class LoginActivity: AppCompatActivity() {
 
 
     private fun createTokenRequest() {
-        ServiceBuilder.getPostApi().createRequestToken(MovieDBApiKey)
-            .enqueue(object: Callback<Token> {
-
-                override fun onFailure(call: Call<Token>, t: Throwable) {
-                    Toast.makeText(this@LoginActivity, getString(R.string.error), Toast.LENGTH_SHORT).show()
-                    progressBar.visibility = View.GONE
-                    receivedToken = ""
-                }
-
-                override fun onResponse(call: Call<Token>, response: Response<Token>) {
-                    if (response.isSuccessful) {
-                        val requestedToken = response.body()
-                        if (requestedToken != null) {
-                            receivedToken = requestedToken.token
-                            loginValidationData = LoginValidationData(
-                                username.text.toString(),
-                                password.text.toString(), receivedToken
-                            )
-                            validateWithLogin()
-                        }
-                    } else {
-                        progressBar.visibility = View.GONE
+        launch {
+            try {
+                val response = ServiceBuilder.getPostApi().createRequestToken(MovieDBApiKey)
+                if (response.isSuccessful) {
+                    val requestedToken = response.body()
+                    if (requestedToken != null) {
+                        receivedToken = requestedToken.token
+                        loginValidationData = LoginValidationData(
+                            username.text.toString(),
+                            password.text.toString(), receivedToken
+                        )
+                        validateWithLogin()
                     }
+                } else {
+                    progressBar.visibility = View.GONE
                 }
-            })
+            } catch (e:Exception) {
+                progressBar.visibility = View.GONE
+            }
+        }
     }
 
     private fun validateWithLogin() {
-        ServiceBuilder.getPostApi().validateWithLogin(MovieDBApiKey, loginValidationData).enqueue(object :
-           Callback<Token> {
-            override fun onFailure(call: Call<Token>, t: Throwable) {
-                progressBar.visibility = View.GONE
-                Toast.makeText(this@LoginActivity, getString(R.string.error), Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onResponse(call: Call<Token>, response: Response<Token>) {
+        launch {
+            try {
+                val response = ServiceBuilder.getPostApi().validateWithLogin(MovieDBApiKey, loginValidationData)
                 if (response.isSuccessful) {
                     token = Token(receivedToken)
                     createSession()
@@ -112,30 +118,34 @@ class LoginActivity: AppCompatActivity() {
                     wrongDataText.text = getString(R.string.wrong)
                     progressBar.visibility = View.GONE
                 }
+            } catch (e:Exception) {
+                progressBar.visibility = View.GONE
             }
-        })
+
+        }
     }
 
     private fun createSession() {
-        ServiceBuilder.getPostApi().createSession(MovieDBApiKey, token).enqueue(object :
-            Callback<Session> {
-            override fun onFailure(call: Call<Session>, t: Throwable) {
-                progressBar.visibility = View.GONE
-                Toast.makeText(this@LoginActivity, getString(R.string.error), Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onResponse(call: Call<Session>, response: Response<Session>) {
+        launch {
+            try {
+                val response = ServiceBuilder.getPostApi().createSession(MovieDBApiKey, token)
                 if (response.isSuccessful) {
                     sessionId = response.body()?.sessionId.toString()
-
 
                     saveToSharedPreferences()
 
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
+                } else {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(this@LoginActivity, getString(R.string.error), Toast.LENGTH_SHORT).show()
                 }
+            } catch (e:Exception) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(this@LoginActivity, getString(R.string.error), Toast.LENGTH_SHORT).show()
             }
-        })
+
+        }
     }
 
 
@@ -147,6 +157,5 @@ class LoginActivity: AppCompatActivity() {
         editor.putString(getString(R.string.session_id), sessionId)
         editor.apply()
     }
-
 
 }
