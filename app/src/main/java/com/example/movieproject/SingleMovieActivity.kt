@@ -126,4 +126,5 @@ class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
         }
     }
 
+
 }
