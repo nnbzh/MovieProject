@@ -10,11 +10,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.movieproject.MovieClasses.SingleMovie
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
-class SingleMovieActivity : AppCompatActivity() {
+class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
+
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+
     private lateinit var progressBar: ProgressBar
     private lateinit var backBtn: ImageButton
     private lateinit var poster: ImageView
@@ -34,6 +46,7 @@ class SingleMovieActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_movie);
+
         mainLayout = findViewById(R.id.mainLayout)
         mainLayout.visibility = View.INVISIBLE;
 
@@ -62,55 +75,55 @@ class SingleMovieActivity : AppCompatActivity() {
     }
 
     private fun getMovie(id: Int) {
-        ServiceBuilder.getPostApi().getMovie(id, MovieDBApiKey).enqueue(object: Callback<SingleMovie> {
-            override fun onFailure(call: Call<SingleMovie>, t: Throwable) {
-                progressBar.visibility = View.GONE
-            }
+        launch {
+            try {
+                val response = ServiceBuilder.getPostApi().getMovie(id, MovieDBApiKey)
+                if (response.isSuccessful) {
+                    val singleMovie = response.body()
+                    if (singleMovie != null) {
+                        mainLayout.visibility = View.VISIBLE
+                        title.text = singleMovie.title
+                        releaseYear.text = singleMovie.releaseDate.substring(0,4)
+                        releaseDate.text = singleMovie.releaseDate
+                        duration.text = "${singleMovie.runtime.toString()} ${getString(R.string.min)}"
+                        plot.text = singleMovie.overview
+                        rating.text = singleMovie.voteAverage.toString()
+                        budget.text = "${singleMovie.budget.toString()} ${getString(R.string.dollar)}"
+                        revenue.text = "${singleMovie.revenue.toString()} ${getString(R.string.dollar)}"
+                        genres.text = ""
+                        producers.text = ""
 
-            override fun onResponse(call: Call<SingleMovie>, response: Response<SingleMovie>) {
-                mainLayout.visibility = View.VISIBLE;
-                progressBar.visibility = View.GONE
-                val singleMovie = response.body()
-                if (singleMovie != null) {
-                    title.text = singleMovie.title
-                    releaseYear.text = singleMovie.releaseDate.substring(0,4)
-                    releaseDate.text = singleMovie.releaseDate
-                    duration.text = "${singleMovie.runtime.toString()} ${getString(R.string.min)}"
-                    plot.text = singleMovie.overview
-                    rating.text = singleMovie.voteAverage.toString()
-                    budget.text = "${singleMovie.budget.toString()} ${getString(R.string.dollar)}"
-                    revenue.text = "${singleMovie.revenue.toString()} ${getString(R.string.dollar)}"
-                    genres.text = ""
-                    producers.text = ""
-
-                    for (i in singleMovie.genres.indices) {
-                        if (i == 0) {
-                            genres.append(singleMovie.genres[i].name.toString());
-                        } else {
-                            genres.append(", " + singleMovie.genres[i].name.toString());
+                        for (i in singleMovie.genres.indices) {
+                            if (i == 0) {
+                                genres.append(singleMovie.genres[i].name.toString());
+                            } else {
+                                genres.append(", " + singleMovie.genres[i].name.toString());
+                            }
+                            if (i == 4) break;
                         }
-                        if (i == 4) break;
-                    }
 
-                    for (i in singleMovie.producers.indices) {
-                        if (i == 0) {
-                            producers.append(singleMovie.producers[i].name.toString());
-                        } else {
-                            producers.append(", " + singleMovie.producers[i].name.toString());
+                        for (i in singleMovie.producers.indices) {
+                            if (i == 0) {
+                                producers.append(singleMovie.producers[i].name.toString());
+                            } else {
+                                producers.append(", " + singleMovie.producers[i].name.toString());
+                            }
                         }
+
+
+                        Picasso.get()
+                            .load("https://image.tmdb.org/t/p/w500" + singleMovie.posterPath)
+                            .into(poster)
+                        Picasso.get()
+                            .load("https://image.tmdb.org/t/p/w500" + singleMovie.posterPath)
+                            .into(posterFull)
                     }
-
-
-                    Picasso.get()
-                        .load("https://image.tmdb.org/t/p/w500" + singleMovie.posterPath)
-                        .into(poster)
-                    Picasso.get()
-                        .load("https://image.tmdb.org/t/p/w500" + singleMovie.posterPath)
-                        .into(posterFull)
-
                 }
+                progressBar.visibility = View.GONE
+            } catch (e: Exception) {
+                progressBar.visibility = View.GONE
             }
-        })
+        }
     }
 
 }

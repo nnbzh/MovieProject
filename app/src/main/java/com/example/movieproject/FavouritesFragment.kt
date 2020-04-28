@@ -16,12 +16,22 @@ import com.example.movieproject.MovieClasses.LikedMovie
 import com.example.movieproject.MovieClasses.Movie
 import com.example.movieproject.MovieClasses.MoviesResponse
 import com.example.movieproject.MovieClasses.StatusResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
 
-class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
+class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener, CoroutineScope {
+
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
 
     private lateinit var recyclerView: RecyclerView
@@ -79,35 +89,32 @@ class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
         startActivity(intent)
     }
 
-    private fun getMovies() {
 
-       ServiceBuilder.getPostApi().getFavouriteMovies(MovieDBApiKey, sessionId)
-            .enqueue(object : Callback<MoviesResponse> {
-                override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
+    private fun getMovies() {
+        launch {
+            try {
+                val response = ServiceBuilder.getPostApi().getFavouriteMovies(MovieDBApiKey, sessionId)
+                if (response.isSuccessful) {
+                    val movies: MoviesResponse? = response.body()
+                    if (movies?.movieList?.size == 0) {
+                        swipeRefreshLayout.isRefreshing = false
+                    } else {
+                        adapter?.movies = movies?.movieList
+                        if (adapter?.movies != null) {
+                            for (movie in adapter?.movies as MutableList<Movie>) {
+                                movie.isClicked = true
+                            }
+                        }
+                        adapter?.notifyDataSetChanged()
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                } else {
                     swipeRefreshLayout.isRefreshing = false
                 }
+            } catch (e:Exception) {
 
-                override fun onResponse(
-                    call: Call<MoviesResponse>,
-                    response: Response<MoviesResponse>) {
-
-                    if (response.isSuccessful) {
-                        val movies: MoviesResponse? = response.body()
-                        if (movies?.movieList?.size == 0) {
-                            swipeRefreshLayout.isRefreshing = false
-                        } else {
-                            adapter?.movies = movies?.movieList
-                            if (adapter?.movies != null) {
-                                for (movie in adapter?.movies as MutableList<Movie>) {
-                                    movie.isClicked = true
-                                }
-                            }
-                            adapter?.notifyDataSetChanged()
-                            swipeRefreshLayout.isRefreshing = false
-                        }
-                    }
-                }
-            })
+            }
+        }
     }
 
     override fun addToFavourites(position: Int, item: Movie) {
@@ -116,40 +123,23 @@ class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener {
         if (!item.isClicked) {
             item.isClicked = true
             likedMovie = LikedMovie("movie", item.id, item.isClicked)
-            ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey, sessionId, likedMovie)
-                .enqueue(object : Callback<StatusResponse> {
-                    override fun onFailure(call: Call<StatusResponse>, t: Throwable) {}
-
-                    override fun onResponse(
-                        call: Call<StatusResponse>,
-                        response: Response<StatusResponse>
-                    ) {
-
-
-                    }
-                })
         } else {
             item.isClicked = false
-
             likedMovie = LikedMovie("movie", item.id, item.isClicked)
             likedMovie.selectedStatus = item.isClicked
-            ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey, sessionId, likedMovie)
-                .enqueue(object : Callback<StatusResponse> {
-                    override fun onFailure(call: Call<StatusResponse>, t: Throwable)
-                    {Toast.makeText(context, "rate operation failed", Toast.LENGTH_SHORT).show()}
+        }
+        launch {
+            try {
+                val response = ServiceBuilder.getPostApi().addRemoveFavourites(MovieDBApiKey, sessionId, likedMovie)
+                if (response.isSuccessful) {
+                    swipeRefreshLayout.isRefreshing = true
+                    adapter?.clearAll()
+                    getMovies()
+                }
+            } catch (e:Exception) {
 
-                    override fun onResponse(
-                        call: Call<StatusResponse>,
-                        response: Response<StatusResponse>
-                    ) {
-                        swipeRefreshLayout.isRefreshing = true
-                        adapter?.clearAll()
-                        getMovies()
-                    }
-                })
-
-
-
+            }
         }
     }
+
 }
