@@ -129,10 +129,7 @@ class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
         var i: Int = 0;
         if (genres.isNullOrEmpty())
         else {
-            for (genre in genres!!) {
-                names+= "${genre.name}, "
-                i+=1;
-            }
+            for (genre in genres!!) names+= "${genre.name}, "
         }
         return names;
     }
@@ -142,7 +139,7 @@ class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
         var i: Int = 0;
         if (producers.isNullOrEmpty())
         else {
-            for (prod in producers!!) {
+            for (prod in producers) {
                 producersName+= "${prod.name}, "
             }
         }
