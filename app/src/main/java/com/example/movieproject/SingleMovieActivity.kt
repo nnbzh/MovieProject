@@ -149,4 +149,5 @@ class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
         return producersName;
     }
 
+
 }

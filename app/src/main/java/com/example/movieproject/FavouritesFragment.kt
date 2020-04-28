@@ -173,6 +173,8 @@ class FavouritesFragment: Fragment(), MovieAdapter.RvItemClickListener, Coroutin
         getMovies()
     }
 
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
 }
