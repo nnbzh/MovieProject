@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"
+        <activity android:name="com.example.movieproject.view.Activities.LoginActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,11 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"> <intent-filter>
+        <activity android:name="com.example.movieproject.view.Activities.MainActivity"> <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
         </intent-filter></activity>
-        <activity android:name=".SingleMovieActivity"></activity>
+        <activity android:name=".view.Activities.SingleMovieActivity"></activity>
     </application>
 
 </manifest>
