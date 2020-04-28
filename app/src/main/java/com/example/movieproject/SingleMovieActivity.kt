@@ -8,19 +8,19 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.movieproject.MovieClasses.SingleMovie
+import com.example.kino.MovieClasses.Producers
+import com.example.movieproject.Database.MovieDao
+import com.example.movieproject.Database.MovieDatabase
+import com.example.movieproject.MovieClasses.Genre
+import com.example.movieproject.MovieClasses.Movie
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
+
+    private var movieDao: MovieDao? = null
 
     private val job = Job()
     override val coroutineContext: CoroutineContext
@@ -46,6 +46,8 @@ class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_movie);
+
+        movieDao = MovieDatabase.getDatabase(context = this).movieDao()
 
         mainLayout = findViewById(R.id.mainLayout)
         mainLayout.visibility = View.INVISIBLE;
@@ -76,54 +78,75 @@ class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
 
     private fun getMovie(id: Int) {
         launch {
-            try {
-                val response = ServiceBuilder.getPostApi().getMovie(id, MovieDBApiKey)
-                if (response.isSuccessful) {
-                    val singleMovie = response.body()
-                    if (singleMovie != null) {
-                        mainLayout.visibility = View.VISIBLE
-                        title.text = singleMovie.title
-                        releaseYear.text = singleMovie.releaseDate.substring(0,4)
-                        releaseDate.text = singleMovie.releaseDate
-                        duration.text = "${singleMovie.runtime.toString()} ${getString(R.string.min)}"
-                        plot.text = singleMovie.overview
-                        rating.text = singleMovie.voteAverage.toString()
-                        budget.text = "${singleMovie.budget.toString()} ${getString(R.string.dollar)}"
-                        revenue.text = "${singleMovie.revenue.toString()} ${getString(R.string.dollar)}"
-                        genres.text = ""
-                        producers.text = ""
-
-                        for (i in singleMovie.genres.indices) {
-                            if (i == 0) {
-                                genres.append(singleMovie.genres[i].name.toString());
-                            } else {
-                                genres.append(", " + singleMovie.genres[i].name.toString());
-                            }
-                            if (i == 4) break;
-                        }
-
-                        for (i in singleMovie.producers.indices) {
-                            if (i == 0) {
-                                producers.append(singleMovie.producers[i].name.toString());
-                            } else {
-                                producers.append(", " + singleMovie.producers[i].name.toString());
-                            }
-                        }
-
-
-                        Picasso.get()
-                            .load("https://image.tmdb.org/t/p/w500" + singleMovie.posterPath)
-                            .into(poster)
-                        Picasso.get()
-                            .load("https://image.tmdb.org/t/p/w500" + singleMovie.posterPath)
-                            .into(posterFull)
+            val movieDetail = withContext(Dispatchers.IO) {
+                try {
+                    val response = ServiceBuilder.getPostApi().getMovie(id, MovieDBApiKey)
+                    if (response.isSuccessful) {
+                        val movie = response.body()
+                        movie?.runtime?.let { movieDao?.updateMovieRuntime(it, id) }
+                        return@withContext movie
+                    } else {
+                        return@withContext movieDao?.getMovie(id)
                     }
+                } catch (e: Exception) {
+                    movieDao?.getMovie(id)
                 }
-                progressBar.visibility = View.GONE
-            } catch (e: Exception) {
-                progressBar.visibility = View.GONE
+            }
+            progressBar.visibility = View.GONE
+            val singleMovie: Movie = movieDetail as Movie
+
+            mainLayout.visibility = View.VISIBLE
+            title.text = singleMovie.title
+            releaseYear.text = singleMovie.releaseDate.substring(0, 4)
+            releaseDate.text = singleMovie.releaseDate
+            duration.text = "${singleMovie.runtime.toString()} ${getString(R.string.min)}"
+            plot.text = singleMovie.overview
+            rating.text = singleMovie.voteAverage.toString()
+            budget.text = "${singleMovie.budget.toString()} ${getString(R.string.dollar)}"
+            revenue.text = "${singleMovie.revenue.toString()} ${getString(R.string.dollar)}"
+            genres.text = genresToString(singleMovie.genres)
+            producers.text = setProdNames(singleMovie.producers)
+
+
+            Picasso.get()
+                .load("https://image.tmdb.org/t/p/w500" + singleMovie.posterPath)
+                .into(poster)
+            Picasso.get()
+                .load("https://image.tmdb.org/t/p/w500" + singleMovie.posterPath)
+                .into(posterFull)
+
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
+
+
+    private fun genresToString(genres: List<Genre>?): String {
+        var names = ""
+        var i: Int = 0;
+        if (genres.isNullOrEmpty())
+        else {
+            for (genre in genres!!) {
+                names+= "${genre.name}, "
+                i+=1;
             }
         }
+        return names;
+    }
+
+    private fun setProdNames(producers: List<Producers>?) : String {
+        var producersName = ""
+        var i: Int = 0;
+        if (producers.isNullOrEmpty())
+        else {
+            for (prod in producers!!) {
+                producersName+= "${prod.name}, "
+            }
+        }
+        return producersName;
     }
 
 }
