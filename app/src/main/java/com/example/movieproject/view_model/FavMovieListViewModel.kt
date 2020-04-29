@@ -68,10 +68,10 @@ class FavMovieListViewModel(private val context: Context) : CentralViewModel() {
                         }
                         return@withContext movies
                     } else {
-                        return@withContext movieDao?.getFavouriteMovies() ?: emptyList()
+                        return@withContext movieDao.getFavouriteMovies()
                     }
                 } catch (e: Exception) {
-                    return@withContext movieDao?.getFavouriteMovies() ?: emptyList()
+                    return@withContext movieDao.getFavouriteMovies()
                 }
             }
             liveData.value = State.HideLoading
@@ -79,7 +79,7 @@ class FavMovieListViewModel(private val context: Context) : CentralViewModel() {
         }
     }
     private fun refreshFavourites() {
-        val movies = movieStatusDao?.getMovieStatuses()
+        val movies = movieStatusDao.getMovieStatuses()
         if (!movies.isNullOrEmpty()) {
             for (movie in movies) {
                 val likedMovie = LikedMovie(
@@ -89,7 +89,7 @@ class FavMovieListViewModel(private val context: Context) : CentralViewModel() {
                 addRemoveFavourites(likedMovie)
             }
         }
-        movieStatusDao?.deleteAll()
+        movieStatusDao.deleteAll()
     }
 
     private fun addRemoveFavourites(likedMovie: LikedMovie) {
@@ -100,12 +100,12 @@ class FavMovieListViewModel(private val context: Context) : CentralViewModel() {
                 }
             } catch (e:Exception) {
                 withContext(Dispatchers.IO) {
-                    movieDao?.updateMovieIsCLicked(
+                    movieDao.updateMovieIsCLicked(
                         likedMovie.selectedStatus,
                         likedMovie.movieId
                     )
                     val moviesStatus = MovieStatus(likedMovie.movieId, likedMovie.selectedStatus)
-                    movieStatusDao?.insertMovieStatus(moviesStatus)
+                    movieStatusDao.insertMovieStatus(moviesStatus)
                 }
             }
         }

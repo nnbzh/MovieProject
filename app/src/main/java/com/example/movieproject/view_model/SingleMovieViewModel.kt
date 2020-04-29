@@ -30,13 +30,13 @@ class SingleMovieViewModel(private val context: Context) : CentralViewModel() {
                     )
                     if (response.isSuccessful) {
                         val movie = response.body()
-                        movie?.runtime?.let { movieDao?.updateMovieRuntime(it, id) }
+                        movie?.runtime?.let { movieDao.updateMovieRuntime(it, id) }
                         return@withContext movie
                     } else {
-                        return@withContext movieDao?.getMovie(id)
+                        return@withContext movieDao.getMovie(id)
                     }
                 } catch (e: Exception) {
-                    movieDao?.getMovie(id)
+                    movieDao.getMovie(id)
                 }
             }
             val singleMovie: Movie = movieDetail as Movie

@@ -132,23 +132,13 @@ class SingleMovieActivity : AppCompatActivity() , CoroutineScope {
 
     private fun genresToString(genres: List<Genre>?): String {
         var names = ""
-        var i: Int = 0;
-        if (genres.isNullOrEmpty())
-        else {
             for (genre in genres!!) names+= "${genre.name}, "
-        }
         return names;
     }
 
     private fun setProdNames(producers: List<Producers>?) : String {
         var producersName = ""
-        var i: Int = 0;
-        if (producers.isNullOrEmpty())
-        else {
-            for (prod in producers) {
-                producersName+= "${prod.name}, "
-            }
-        }
+            for (prod in producers!!) producersName+= "${prod.name}, "
         return producersName;
     }
 

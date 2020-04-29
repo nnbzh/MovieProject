@@ -59,15 +59,15 @@ class MoviesListViewModel(private val context: Context) : CentralViewModel() {
                             for (movie: Movie in movies) {
                                 likeStatus(movie)
                             }
-                            movieDao?.deleteAll()
-                            movieDao?.insertAll(movies)
+                            movieDao.deleteAll()
+                            movieDao.insertAll(movies)
                         }
                         return@withContext movies
                     } else {
-                        return@withContext movieDao?.getMovies() ?: emptyList()
+                        return@withContext movieDao.getMovies()
                     }
                 } catch (e: Exception) {
-                    return@withContext movieDao?.getMovies() ?: emptyList()
+                    return@withContext movieDao.getMovies()
                 }
             }
             liveData.value = State.HideLoading
@@ -76,7 +76,7 @@ class MoviesListViewModel(private val context: Context) : CentralViewModel() {
     }
 
     private fun refreshFavourites() {
-        val movies = movieStatusDao?.getMovieStatuses()
+        val movies = movieStatusDao.getMovieStatuses()
         if (!movies.isNullOrEmpty()) {
             for (movie in movies) {
                 val likedMovie = LikedMovie(
@@ -86,7 +86,7 @@ class MoviesListViewModel(private val context: Context) : CentralViewModel() {
                 addRemoveFavourites(likedMovie)
             }
         }
-        movieStatusDao?.deleteAll()
+        movieStatusDao.deleteAll()
     }
 
     private fun addRemoveFavourites(likedMovie: LikedMovie) {
@@ -97,12 +97,12 @@ class MoviesListViewModel(private val context: Context) : CentralViewModel() {
                 }
             } catch (e:Exception) {
                 withContext(Dispatchers.IO) {
-                    movieDao?.updateMovieIsCLicked(
+                    movieDao.updateMovieIsCLicked(
                         likedMovie.selectedStatus,
                         likedMovie.movieId
                     )
                     val moviesStatus = MovieStatus(likedMovie.movieId, likedMovie.selectedStatus)
-                    movieStatusDao?.insertMovieStatus(moviesStatus)
+                    movieStatusDao.insertMovieStatus(moviesStatus)
                 }
             }
         }
@@ -130,7 +130,7 @@ class MoviesListViewModel(private val context: Context) : CentralViewModel() {
                     if (movieStatus != null) {
                         movie.isClicked = movieStatus.selectedStatus
                         withContext(Dispatchers.IO) {
-                            movieDao?.updateMovieIsCLicked(movie.isClicked, movie.id)
+                            movieDao.updateMovieIsCLicked(movie.isClicked, movie.id)
                         }
                         liveData.value = State.Update
                     }
