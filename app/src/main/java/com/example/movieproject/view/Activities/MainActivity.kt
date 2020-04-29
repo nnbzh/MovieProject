@@ -15,6 +15,7 @@ import com.example.movieproject.view.Fragments.FavouritesFragment
 import com.example.movieproject.view.Fragments.FragmentFeed
 import com.example.movieproject.view.Fragments.UserInfoFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var toolbarAppTitle: TextView
     private lateinit var ibSearch: AppCompatImageButton
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     private val fragmentManager: FragmentManager = supportFragmentManager
     private var activeFragment: Fragment =
         FragmentFeed()
@@ -31,18 +34,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        bindViews()
+        getSharedPreferences()
 
-        toolbar = findViewById(R.id.toolbar)
-        toolbarAppTitle = findViewById<TextView>(R.id.apptitle)
-        ibSearch = findViewById(R.id.ibSearch)
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
-        sharedPreferences = getSharedPreferences( getString(R.string.preference_file), Context.MODE_PRIVATE)
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "my_item_id")
 
-        val bottomNavigationView= findViewById<BottomNavigationView>(R.id.bottom_nav)
-        bottomNavigationView.setOnNavigationItemSelectedListener(navigationListener)
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+
+
         fragmentManager.beginTransaction().add(
             R.id.main_container,
             FragmentFeed(), "1").commit()
+    }
+
+    private fun getSharedPreferences() {
+        sharedPreferences = getSharedPreferences( getString(R.string.preference_file), Context.MODE_PRIVATE)
+    }
+    private fun bindViews() {
+        toolbar = findViewById(R.id.toolbar)
+        toolbarAppTitle = findViewById<TextView>(R.id.apptitle)
+        ibSearch = findViewById(R.id.ibSearch)
+        val bottomNavigationView= findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNavigationView.setOnNavigationItemSelectedListener(navigationListener)
     }
 
     private val navigationListener =
