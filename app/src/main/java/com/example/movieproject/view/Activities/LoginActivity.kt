@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.movieproject.R
 import com.example.movieproject.view_model.LoginViewModel
 import com.example.movieproject.view_model.ViewModelProviderFactory
+import com.google.firebase.messaging.FirebaseMessaging
 
 class LoginActivity: AppCompatActivity() {
 
@@ -24,16 +25,21 @@ class LoginActivity: AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var viewModelProviderFactory: ViewModelProviderFactory
+    private val topic = "movies"
 
     private val signUpUrl: String = "https://www.themoviedb.org/account/signup"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_page)
+        subscribe()
 
         initViewModel()
         login()
         bindViews()
+    }
+    private fun subscribe(){
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
     }
 
     private fun initViewModel() {

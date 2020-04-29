@@ -22,6 +22,14 @@
             <action android:name="android.intent.action.MAIN" />
 
         </intent-filter></activity>
+        <service android:name=".model.NotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <meta-data android:name="com.google.messaging.default_notification_icon"
+            android:resource="@drawable/ic_live_tv_black_24dp"/>
         <activity android:name=".view.Activities.SingleMovieActivity"></activity>
     </application>
 
