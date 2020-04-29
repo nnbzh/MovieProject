@@ -101,6 +101,7 @@
                 android:layout_height="match_parent">
 
                 <Button
+                    android:id="@+id/btnMap"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="1dp"
@@ -108,7 +109,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/white"
                     android:padding="10dp"
-                    android:text="SCAN QR"
+                    android:text="Show Map"
                     android:textAlignment="viewStart" />
             </TableRow>
         </TableLayout>
